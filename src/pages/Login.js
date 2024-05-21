@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import userIcon from "../assest/usericon.png";
 import { FaEyeSlash } from "react-icons/fa";
 import { IoEyeSharp } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, json, useNavigate } from "react-router-dom";
+import SummaryApi from "../common";
+import { toast } from "react-toastify";
+import Context from "../context";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
+  const fetchUserDetails = useContext(Context);
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setData((preve) => {
@@ -18,13 +23,29 @@ const Login = () => {
       };
     });
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const dataResponse = await fetch(SummaryApi.signIn.url, {
+      method: SummaryApi.signIn.method,
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const dataApi = await dataResponse.json();
+    if (dataApi.success) {
+      toast.success(dataApi.message);
+      navigate("/");
+      fetchUserDetails();
+    } else {
+      toast.error(dataApi.message);
+    }
   };
   return (
     <section id="login">
-      <div className="flex flex-col items-center justify-center p-4 h-dvh bg-gradient-to-br from-gray-400 to-blue-200">
-        <div className="bg-gradient-to-br from-gray-400 to-blue-200 shadow-md px-4 py-6 w-full max-w-md mx-auto rounded-md m-auto">
+      <div>
+        <div className="bg-white shadow-md px-4 py-6 w-full max-w-md mx-auto rounded-md m-auto">
           <div className="w-24 h-24 mx-auto">
             <img src={userIcon} alt="login icons" />
           </div>

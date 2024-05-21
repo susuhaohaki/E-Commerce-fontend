@@ -6,7 +6,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 const Navbar = () => {
   return (
-    <div className="h-16 shadow-md bg-white">
+    <div className="h-16 shadow-md bg-white mb-3">
       <div className="h-full container mx-auto flex items-center px-4 justify-between">
         <div>
           <Link to={"/"}>
